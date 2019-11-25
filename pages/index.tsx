@@ -4,25 +4,20 @@ import { NetworkStatus } from 'apollo-client'
 
 import { withDato } from "../lib/datocms";
 import Layout from "../components/MyLayout";
-import TeamMember from "../components/TeamMember";
+import TeamMember, { fragment as teamMemberFragment } from "../components/TeamMember";
 import ErrorMessage from "../components/ErrorMessage";
-import { fragment } from "../components/DatoCmsImage";
 import { TeamMembersQuery, TeamMembersQueryVariables } from './types/TeamMembersQuery';
 
 const ALL_MEMBERS_QUERY = gql`
   query TeamMembersQuery($first: IntType!, $skip: IntType!) {
     allTeamMembers(first: $first, skip: $skip) {
-      id
-      name
-      role
-      avatar {
-        ...${fragment}
-      }
+      ...TeamMember
     }
     _allTeamMembersMeta {
       count
     }
   }
+  ${teamMemberFragment}
 `;
 
 export const allTeamMembersQueryVars: TeamMembersQueryVariables = {
@@ -35,9 +30,6 @@ const Index: React.SFC = () => {
     ALL_MEMBERS_QUERY,
     {
       variables: allTeamMembersQueryVars,
-      // Setting this value to true will make the component rerender when
-      // the "networkStatus" changes, so we are able to know if it is fetching
-      // more data
       notifyOnNetworkStatusChange: true,
     }
   )

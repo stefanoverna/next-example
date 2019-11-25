@@ -1,15 +1,5 @@
 import gql from 'graphql-tag';
-
-type Imageish = {
-  width: number | null;
-  height: number | null;
-  url: string;
-  blurhashBase64Thumb: string | null;
-}
-
-type PropTypes = {
-  src: Imageish,
-}
+import { DatoCmsImage as DatoCmsImageType } from './types/DatoCmsImage';
 
 export const fragment = gql`
   fragment DatoCmsImage on FileField {
@@ -20,10 +10,14 @@ export const fragment = gql`
   }
 `;
 
+export type PropTypes = {
+  src: DatoCmsImageType,
+}
+
 const DatoCmsImage: React.SFC<PropTypes> = ({ src }) => {
   return (
     <>
-      <img src={src.url} />
+      <img src={`${src.url}?w=50`} />
     </>
   )
 }

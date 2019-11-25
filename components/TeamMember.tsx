@@ -1,9 +1,22 @@
-import DatoCmsImage from './DatoCmsImage';
+import gql from 'graphql-tag';
+import DatoCmsImage, { fragment as DatoCmsImageFragment, PropTypes as DatoCmsImagePropTypes } from './DatoCmsImage';
+
+export const fragment = gql`
+  fragment TeamMember on TeamMemberRecord {
+    id
+    name
+    role
+    avatar {
+      ...DatoCmsImage
+    }
+  }
+  ${DatoCmsImageFragment}
+`;
 
 type PropTypes = {
   name: string | null;
   role: string | null;
-  avatar: object | null;
+  avatar: DatoCmsImagePropTypes['src'] | null;
 };
 
 const TeamMember: React.SFC<PropTypes> = ({ name, avatar }) => {
