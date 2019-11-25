@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import SFC from '../lib/SFC';
 
-import DatoCmsImage, { PropTypes as DatoCmsImagePropTypes } from './DatoCmsImage';
+import DatoCmsImage, { PropTypes as DatoCmsImagePropTypes } from './datocms-image';
 
 type PropTypes = {
   name: string | null;
@@ -31,7 +31,12 @@ TeamMember.fragment = gql`
     name
     role
     avatar {
-      ...DatoCmsImage
+      fluidImage(maxWidth: 700) {
+        ...DatoCmsImage
+      }
+      fixedImage(width: 700, height: 700) {
+        ...DatoCmsImage
+      }
     }
   }
   ${DatoCmsImage.fragment}
