@@ -1,7 +1,31 @@
 import gql from 'graphql-tag';
-import DatoCmsImage, { fragment as DatoCmsImageFragment, PropTypes as DatoCmsImagePropTypes } from './DatoCmsImage';
+import SFC from '../lib/SFC';
 
-export const fragment = gql`
+import DatoCmsImage, { PropTypes as DatoCmsImagePropTypes } from './DatoCmsImage';
+
+type PropTypes = {
+  name: string | null;
+  role: string | null;
+  avatar: DatoCmsImagePropTypes['image'] | null;
+};
+
+const TeamMember: SFC<PropTypes> = ({ name, avatar }) => {
+  return (
+    <div className="team-member">
+      <div className="team-member__name">{name}</div>
+      {avatar &&
+        <DatoCmsImage image={avatar} />
+      }
+      <style jsx>{`
+        .team-member__name {
+          font-weight: bold;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+TeamMember.fragment = gql`
   fragment TeamMember on TeamMemberRecord {
     id
     name
@@ -10,40 +34,7 @@ export const fragment = gql`
       ...DatoCmsImage
     }
   }
-  ${DatoCmsImageFragment}
+  ${DatoCmsImage.fragment}
 `;
-
-type PropTypes = {
-  name: string | null;
-  role: string | null;
-  avatar: DatoCmsImagePropTypes['src'] | null;
-};
-
-const TeamMember: React.SFC<PropTypes> = ({ name, avatar }) => {
-  return (
-    <div>
-      {name}
-      {avatar &&
-        <DatoCmsImage src={avatar} />
-      }
-      <style jsx>{`
-        li {
-          list-style: none;
-          margin: 5px 0;
-        }
-
-        a {
-          text-decoration: none;
-          color: blue;
-          font-family: "Arial";
-        }
-
-        a:hover {
-          opacity: 0.6;
-        }
-      `}</style>
-    </div>
-  );
-};
 
 export default TeamMember;

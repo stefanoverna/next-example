@@ -7,9 +7,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "schema": "apollo schema:download --endpoint=https://graphql-staging.datocms.com/ --header='Authorization: Bearer faeb9172e232a75339242faafb9e56de8c8f13b735f7090964'",
-    "codegen": "apollo codegen:generate --localSchemaFile=schema.json --target=typescript '--includes={components,pages}/*.tsx' --addTypename --globalTypesFile=types/graphql-global-types.ts --passthroughCustomScalars --customScalarsPrefix=GQL types",
-    "checkQueries": "apollo schema:check --schema=schema.json '--includes={components,pages}/*.tsx'"
+    "schema": "apollo schema:download --endpoint=https://graphql.datocms.com/ --header='Authorization: Bearer faeb9172e232a75339242faafb9e56de8c8f13b735f7090964'",
+    "codegen": "apollo codegen:generate --localSchemaFile=schema.json --target=typescript '--includes={components,pages}/*.tsx' --addTypename --globalTypesFile=types/graphql-global-types.ts --passthroughCustomScalars --customScalarsPrefix=GQL types"
   },
   "keywords": [],
   "author": "",

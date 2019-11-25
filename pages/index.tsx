@@ -4,7 +4,7 @@ import { NetworkStatus } from 'apollo-client'
 
 import { withDato } from "../lib/datocms";
 import Layout from "../components/MyLayout";
-import TeamMember, { fragment as teamMemberFragment } from "../components/TeamMember";
+import TeamMember from "../components/TeamMember";
 import ErrorMessage from "../components/ErrorMessage";
 import { TeamMembersQuery, TeamMembersQueryVariables } from './types/TeamMembersQuery';
 
@@ -17,7 +17,7 @@ const ALL_MEMBERS_QUERY = gql`
       count
     }
   }
-  ${teamMemberFragment}
+  ${TeamMember.fragment}
 `;
 
 export const allTeamMembersQueryVars: TeamMembersQueryVariables = {

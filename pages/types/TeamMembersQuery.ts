@@ -8,9 +8,9 @@
 
 export interface TeamMembersQuery_allTeamMembers_avatar {
   __typename: "FileField";
+  url: string;
   width: GQLIntType | null;
   height: GQLIntType | null;
-  url: string;
   blurhashBase64Thumb: string | null;
 }
 
