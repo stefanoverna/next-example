@@ -1,76 +1,88 @@
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-import { NetworkStatus } from 'apollo-client'
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
+import { NetworkStatus } from "apollo-client";
 
 import { withDato } from "../lib/datocms";
-import Layout from "../components/MyLayout";
-import TeamMember from "../components/TeamMember";
+import BlogPost from "../components/BlogPost";
 import ErrorMessage from "../components/ErrorMessage";
-import { TeamMembersQuery, TeamMembersQueryVariables } from './types/TeamMembersQuery';
+
+import {
+  BlogPostsQuery,
+  BlogPostsQueryVariables
+} from "./types/BlogPostsQuery";
 
 const ALL_MEMBERS_QUERY = gql`
-  query TeamMembersQuery($first: IntType!, $skip: IntType!) {
-    allTeamMembers(first: $first, skip: $skip) {
-      ...TeamMember
+  query BlogPostsQuery($first: IntType!, $skip: IntType!) {
+    allBlogPosts: allBlogPosts(first: $first, skip: $skip, orderBy: publicationDate_DESC) {
+      ...BlogPost
     }
-    _allTeamMembersMeta {
+    _allBlogPostsMeta {
       count
     }
   }
-  ${TeamMember.fragment}
+  ${BlogPost.fragment}
 `;
 
-export const allTeamMembersQueryVars: TeamMembersQueryVariables = {
+export const allBlogPostsQueryVars: BlogPostsQueryVariables = {
   skip: 0,
-  first: 3,
-}
+  first: 6
+};
 
 const Index: React.SFC = () => {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery<TeamMembersQuery, TeamMembersQueryVariables>(
-    ALL_MEMBERS_QUERY,
-    {
-      variables: allTeamMembersQueryVars,
-      notifyOnNetworkStatusChange: true,
-    }
-  )
+  const { loading, error, data, fetchMore, networkStatus } = useQuery<
+    BlogPostsQuery,
+    BlogPostsQueryVariables
+  >(ALL_MEMBERS_QUERY, {
+    variables: allBlogPostsQueryVars,
+    notifyOnNetworkStatusChange: true
+  });
 
-  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore
+  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore;
 
   const loadMorePosts = () => {
     fetchMore({
       variables: {
-        skip: allTeamMembers.length,
+        skip: allBlogPosts.length
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
         if (!fetchMoreResult) {
-          return previousResult
+          return previousResult;
         }
         return Object.assign({}, previousResult, {
           // Append the new posts results to the old one
-          allTeamMembers: [...previousResult.allTeamMembers, ...fetchMoreResult.allTeamMembers],
-        })
-      },
-    })
-  }
+          allBlogPosts: [
+            ...previousResult.allBlogPosts,
+            ...fetchMoreResult.allBlogPosts
+          ]
+        });
+      }
+    });
+  };
 
-  if (error) return <ErrorMessage message="Error loading team members!" />
-  if (loading && !loadingMorePosts) return <div>Loading...</div>
-  if (!data) return <ErrorMessage message="Error loading team members!" />
+  if (error) return <ErrorMessage message="Error loading team members!" />;
+  if (loading && !loadingMorePosts) return <div>Loading...</div>;
+  if (!data) return <ErrorMessage message="Error loading team members!" />;
 
-  const { allTeamMembers, _allTeamMembersMeta } = data
-  const areMoreTeamMembers = allTeamMembers.length < _allTeamMembersMeta.count
+  const { allBlogPosts, _allBlogPostsMeta } = data;
+  const areMoreBlogPosts = allBlogPosts.length < _allBlogPostsMeta.count;
 
   return (
-    <Layout>
-      {allTeamMembers.map(member => (
-        <TeamMember key={member.id} {...member} />
+    <div className="team-members">
+      {allBlogPosts.map(member => (
+        <BlogPost key={member.id} {...member} />
       ))}
-      {areMoreTeamMembers && (
+      {areMoreBlogPosts && (
         <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'}
+          {loadingMorePosts ? "Loading..." : "Show More"}
         </button>
       )}
-    </Layout>
+      <style jsx>{`
+        .team-members {
+          display: flex;
+          flex-wrap: wrap;
+        }
+      `}</style>
+    </div>
   );
 };
 

@@ -7,9 +7,12 @@
 // ====================================================
 
 export interface DatoCmsImage {
-  __typename: "FileField";
-  url: string;
-  width: GQLIntType | null;
-  height: GQLIntType | null;
-  blurhashBase64Thumb: string | null;
+  __typename: "FluidImage";
+  aspectRatio: any;
+  src: string;
+  sizes: string;
+  srcSet: string;
+  width: any;
+  height: any;
+  base64: string;
 }
